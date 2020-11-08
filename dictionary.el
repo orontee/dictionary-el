@@ -324,6 +324,10 @@ by the choice value:
     (error nil))
   "Determines if the Emacs has support to display color")
 
+(defvar dictionary-word-history
+  '()
+  "History list of searched word")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Basic function providing startup actions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1101,7 +1105,7 @@ It presents the word at point as default input and allows editing it."
            (read-string (if default
                             (format "Search word (%s): " default)
                           "Search word: ")
-                        nil nil default))
+                        nil 'dictionary-word-history default))
 	 (if current-prefix-arg
 	     (read-string (if dictionary-default-dictionary
 			      (format "Dictionary (%s): " dictionary-default-dictionary)
@@ -1111,7 +1115,7 @@ It presents the word at point as default input and allows editing it."
   
   ;; if called by pressing the button
   (unless word
-    (setq word (read-string "Search word: ")))
+    (setq word (read-string "Search word: " nil 'dictionary-word-history)))
   ;; just in case non-interactivly called
   (unless dictionary
     (setq dictionary dictionary-default-dictionary))
@@ -1157,7 +1161,8 @@ It presents the word at point as default input and allows editing it."
   (interactive)
   ;; can't use interactive because of mouse events
   (or pattern
-      (setq pattern (read-string "Search pattern: ")))
+      (setq pattern (read-string "Search pattern: "
+				 nil 'dictionary-word-history)))
   (dictionary-new-matching pattern))
 
 ;;;###autoload
